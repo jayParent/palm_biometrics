@@ -4,18 +4,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 from numpy import save
-from functions import importCollection, find_landmarks, get_roi_and_lbp
+from functions import importCollection, find_landmarks, get_roi_and_lbp, find_corners, find_landmarks_v2
 
-collection = '0004'
+collection = '0001'
 img_collection = importCollection(collection)
 
 for i, img in enumerate(img_collection):
     try:
-        lbp = get_roi_and_lbp(img)
-        plt.imshow(lbp, cmap='gray')
-        plt.savefig(f'./landmarks/{collection}/{i}.jpg')
+        if i == 5:
+            corners = find_corners(img, collection, i)
+            find_landmarks_v2(corners)
     except:
         continue
+
+# for i, img in enumerate(img_collection):
+#     try:
+#         lbp = get_roi_and_lbp(img)
+#         plt.imshow(lbp, cmap='gray')
+#         plt.savefig(f'./landmarks/{collection}/{i}.jpg')
+#     except:
+#         continue
 
 # os.makedirs(f'./dataset/{i+1}')
 
