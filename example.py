@@ -96,4 +96,5 @@ if __name__ == '__main__':
     #     hog_fds = pickle.load(fp)
     # with open('data.txt', 'rb') as fp:
     #     data = pickle.load(fp)
-    save_add_labels('2_subjects')
+    save_add_labels('10_subjects')
+    # get_and_save_roi('palms_data')
