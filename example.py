@@ -29,44 +29,31 @@ if __name__ == '__main__':
                 except:
                     continue
 
-    def filter_bad_roi_get_lbp(folder):
-        img_collection  = io.ImageCollection(f'./{folder}/*/*.jpg')
-        lbps = []
-        
-        for img in img_collection:
-            if img.shape[0] < 100 or img.shape[1] < 100:
-                continue
-            else:
-                lbp = get_lbp(img)
-                lbps.append(lbp)
-        
-        return lbps
-    
     def save_add_labels_and_side(folder):
         files = os.listdir(folder)
 
+        data = []
         labels = []
         hand_sides = []
-        data = []
 
-        for i, f in enumerate(files):
+        for f in files:
             ic = io.ImageCollection(f'./{folder}/{f}/*.jpg')
 
-            for img_name in os.listdir(f'./{folder}/{f}'):
-                if 'r' in img_name:
-                    hand_side = 'r'
-                else:
-                    hand_side = 'l'
+            for img, img_name in zip(ic, os.listdir(f'./{folder}/{f}')):
 
-            for img in ic:
                 if img.shape[0] >= 128 and img.shape[1] >= 128:
                     img = transform.resize(img, (128, 128))
-                    fd = hog(img, orientations=8, pixels_per_cell=(8,8), cells_per_block=(1,1))
+                    fd = hog(img, orientations=8, pixels_per_cell=(
+                        8, 8), cells_per_block=(1, 1))
 
-                    data.append(fd)
-                    labels.append(i+1)
-                    hand_sides.append(hand_side)
+                    if 'r' in img_name:
+                        hand_side = 'r'
+                    else:
+                        hand_side = 'l'
 
+                data.append(fd)
+                labels.append(f)
+                hand_sides.append(hand_side)
 
         with open('labels.txt', 'wb') as fp:
             pickle.dump(labels, fp)
@@ -75,29 +62,29 @@ if __name__ == '__main__':
         with open('data.txt', 'wb') as fp:
             pickle.dump(data, fp)
 
-    def filter_bad_roi_get_hog(folder):
-        img_collection  = io.ImageCollection(f'./{folder}/*/*.jpg')
-        hogs = []
-        
-        for img in img_collection:
-            if img.shape[0] < 128 or img.shape[1] < 128:
-                continue
-            else:
-                img = transform.resize(img, (128, 128))
-                fd = hog(img, orientations=8, pixels_per_cell=(8,8), cells_per_block=(1,1))
-                hogs.append(fd)
-        
-        return hogs
+    def save_add_labels(folder):
+        files = os.listdir(folder)
 
-    def get_feature_descriptors(palms):
-        fds = []
+        data = []
+        labels = []
 
-        for palm in palms:
-            fd = hog(palm, orientations=8, pixels_per_cell=(8,8), cells_per_block=(1,1))
-            fds.append(fd)
+        for f in files:
+            ic = io.ImageCollection(f'./{folder}/{f}/*.jpg')
 
-        with open('hog_fds.txt', 'wb') as fp:
-            pickle.dump(fds, fp)
+            for img in ic:
+
+                if img.shape[0] >= 128 and img.shape[1] >= 128:
+                    img = transform.resize(img, (128, 128))
+                    fd = hog(img, orientations=8, pixels_per_cell=(
+                        8, 8), cells_per_block=(1, 1))
+
+                data.append(fd)
+                labels.append(f)
+
+        with open(f'data_{folder}.txt', 'wb') as fp:
+            pickle.dump(data, fp)
+        with open(f'labels_{folder}.txt', 'wb') as fp:
+            pickle.dump(labels, fp)
 
     # with open('palms.txt', 'rb') as fp:
     #     palms = pickle.load(fp)
@@ -109,3 +96,4 @@ if __name__ == '__main__':
     #     hog_fds = pickle.load(fp)
     # with open('data.txt', 'rb') as fp:
     #     data = pickle.load(fp)
+    save_add_labels('2_subjects')
