@@ -3,12 +3,13 @@ import skimage
 import matplotlib.pyplot as plt
 import numpy as np
 import pickle
+import sklearn
 from numpy import load
 from sklearn.model_selection import train_test_split
-from sklearn.svm import SVC
+from sklearn.svm import SVC, OneClassSVM
 from sklearn.decomposition import PCA
-from sklearn.model_selection import cross_val_score, GridSearchCV
-from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import cross_val_score, GridSearchCV, cross_val_predict
+from sklearn.metrics import mean_squared_error, precision_score, recall_score
 from collections import Counter
 import csv
 
@@ -90,7 +91,7 @@ with open('data.txt', 'rb') as fp:
 with open('labels.txt', 'rb') as fp:
     labels = pickle.load(fp)
 
-pca = PCA(n_components=128)
+pca = PCA(n_components=20)
 pca.fit(data)
 
 X = pca.fit_transform(data)
@@ -100,16 +101,31 @@ y = y.astype(np.float64)
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.33, random_state=42)
 
-clf = SVC(C=20, kernel='rbf', gamma=0.02)
-clf.fit(X_train, y_train)
+# print(y[0:14])
+# print(y[14:17])
+# print(y[17:21])
 
-final_predictions = clf.predict(X_test)
+s1_train_normal = X[0:16]
+s1_test_normal = X[0:16]
+s1_train_outliers = X[20:21]
+s1_test = X[14:17]
 
-errors = []
+clf = OneClassSVM(kernel='linear')
+clf.fit(s1_train_normal)
+print(clf.predict(s1_test_normal))
 
-for p, l in zip(final_predictions, y_test):
-    if p != l:
-        errors.append(l)
 
-print(Counter(errors))
-print(len(errors))
+# y_pred_train = clf.predict(X_train)
+# y_pred_test = clf.predict(X_test)
+# n_error_train = y_pred_train[y_pred_train == -1].size
+# n_error_test = y_pred_test[y_pred_test == -1].size
+
+
+# clf = SVC(C=20, kernel='rbf', gamma=0.02)
+# clf = OneClassSVM(gamma='auto')
+# clf.fit(X_train)
+# print(clf.predict(X_test))
+
+# y_preds = cross_val_predict(clf, X_train, y_train, cv=3)
+# print(precision_score(y_train, y_preds, average='micro'))
+# print(recall_score(y_train, y_preds, average='micro'))

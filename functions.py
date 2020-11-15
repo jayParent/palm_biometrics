@@ -20,53 +20,35 @@ def importCollection(collection):
     return img_list
 
 
-def find_corners(image, collection, i):
-    fig, (ax1, ax2) = plt.subplots(1, 2)
-
+def find_corners(image):
     corners = corner_peaks(corner_harris(
         image), min_distance=5, threshold_rel=0.015)
-
-    ax1.imshow(image, cmap='gray')
-    ax2.imshow(image, cmap='gray')
-
-    ax2.plot(corners[:, 1], corners[:, 0], color='cyan', marker='o',
-             linestyle='None', markersize=6)
-
-    plt.savefig(f'./landmarks/test/{collection}/corner_detection{i}.jpg')
 
     return corners
 
 
 def find_landmarks_v2(corners):
-    corners_x_mean = np.mean(corners, axis=0)[1]
-    corners_mean = np.mean(corners)
-    print(f'corners x mean: {corners_x_mean} corners mean: {corners_mean}')
-    potential_landmarks = []
+    distance_between_points = []
 
-    for corner in corners:
-        corner_mean = np.mean(corner)
-        print(f'corner: {corner} corner mean: {corner_mean} difference: {abs(corners_x_mean - corner[1])}')
-        if abs(corners_x_mean - corner[1]) < 150:
-            potential_landmarks.append(corner)
-            
-    potential_landmarks = np.array(potential_landmarks)
-    print(potential_landmarks)
-    print(np.amax(potential_landmarks, axis=0)[0])
-    
-    corners_y_mean = np.mean(potential_landmarks, axis=0)[0]
+    for i, corner in enumerate(corners):
+        for j in range(len(corners)):
+            distance = math.hypot(
+                corners[j][1] - corner[1], corners[j][0] - corner[0])
+            distance_between_points.append([i, j, distance])
 
-    landmark_candidates = []
-    for point in potential_landmarks:
-        if abs(corners_y_mean - point[0]) < 100:
-            landmark_candidates.append(point)
-    
-    landmark_candidates = np.array(landmark_candidates)
-    print(landmark_candidates)
+    landmarks = []
+    for dbp in distance_between_points:
+        distance = dbp[2]
+        corner1 = corners[dbp[0]]
+        corner2 = corners[dbp[1]]
+        if 170 < distance < 200:
+            if abs(corner1[1] - corner2[1]) < 40:
+                landmarks.append([corner2, corner1])
+                break
 
-    # for i, point in enumerate(potential_landmarks):
-    #     distance_between_points = math.hypot(
-    #         potential_landmarks[i + 1][1] - point[1], potential_landmarks[i + 1][0] - point[0])
-    #     print(distance_between_points)
+    landmarks = np.array(landmarks)
+    print(landmarks)
+    return landmarks
 
 
 def get_roi_and_lbp_v2(image):
@@ -98,6 +80,22 @@ def find_landmarks(contours):
     landmark_2 = np.array(max_points[1])
 
     return landmark_1, landmark_2
+
+
+def get_lbp(roi):
+    radius = 1
+    n_points = 8 * radius
+
+    lbp = feature.local_binary_pattern(
+        roi, n_points, radius, method='default')
+        
+    return lbp
+
+
+def hist(ax, lbp):
+    n_bins = int(lbp.max() + 1)
+    return ax.hist(lbp.ravel(), density=True, bins=n_bins, range=(0, n_bins),
+                   facecolor='0.5')
 
 
 def get_roi_and_lbp(image):
@@ -185,3 +183,8 @@ def get_roi_and_lbp(image):
         return lbp
     except:
         return
+
+def display_scores(scores):
+    print("Scores:", scores)
+    print("Mean:", scores.mean())
+    print("Standard Deviation:", scores.std())
