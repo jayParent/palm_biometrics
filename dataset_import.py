@@ -10,12 +10,12 @@ import os
 import pickle
 
 
-def create_dataset_folders(folder):
-    files = os.listdir(folder)
+def create_dataset_folders(sourceFolder, targetFolder):
+    files = os.listdir(sourceFolder)
 
-    os.mkdir('dataset')
+    os.mkdir(targetFolder)
     for i, f in enumerate(files):
-        os.mkdir(f'./dataset/{i+1}')
+        os.mkdir(f'./{targetFolder}/{i+1}')
 
 
 def get_and_save_roi(folder):
@@ -88,3 +88,57 @@ def save_add_labels(folder):
         pickle.dump(data, fp)
     with open(f'labels_{folder}.txt', 'wb') as fp:
         pickle.dump(labels, fp)
+
+
+def save_data_one_class(folder):
+    files = os.listdir(folder)
+
+    data = []
+
+    for f in files:
+        ic = io.ImageCollection(f'./{folder}/{f}/*.jpg')
+
+        for img in ic:
+
+            if img.shape[0] >= 128 and img.shape[1] >= 128:
+                img = transform.resize(img, (128, 128))
+                fd = hog(img, orientations=8, pixels_per_cell=(
+                    8, 8), cells_per_block=(1, 1))
+
+            data.append(fd)
+
+        with open(f'./oneClass_data/{f}.txt', 'wb') as fp:
+            pickle.dump(data, fp)
+
+        data = []
+
+
+def import_data(directory):
+    subjects = []
+
+    for filename in os.listdir(directory):
+        with open(f'{directory}/{filename}', 'rb') as fp:
+            data = np.array(pickle.load(fp))
+            subjects.append([data, filename])
+
+    return subjects
+
+
+def filter_and_pca_subjects(subjects, n_components):
+    good_subjects = []  # 12 or more good ROIs
+    pca = PCA(n_components=n_components)
+
+    for subject in subjects:
+        if(subject[0].shape[0] >= n_components):
+            data = subject[0]
+            subject_number = subject[1].replace('.txt', '')
+
+            pca.fit(data)
+            data = pca.fit_transform(data)
+            good_subjects.append([data, subject_number])
+
+    return good_subjects
+
+    # save_add_labels('dataset')
+    # save_data_one_class('dataset')
+    # create_dataset_folders('palms_data', 'oneClass_data')
