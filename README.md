@@ -6,8 +6,8 @@ Projet développé dans le cadre du cours Projet en Informatique I - INF34515, �
 
 ## Technologies
 - [Python 3]( https://www.python.org/downloads/)
--[Scikit-Image]( https://scikit-image.org/)
--[Scikit-Learn]( https://scikit-learn.org/stable/)
+- [Scikit-Image]( https://scikit-image.org/)
+- [Scikit-Learn]( https://scikit-learn.org/stable/)
 
 ## Installation
 1.	Cloner le repository : https://github.com/jayParent/palm_biometrics.git
