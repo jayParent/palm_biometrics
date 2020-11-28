@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import csv
 import random
 from numpy import where, quantile
-from dataset_import import import_data, filter_and_pca_subjects, random_projections
+from dataset_import import import_data, filter_and_pca_subjects
 from sklearn.svm import SVC, OneClassSVM
 
 data_filename = 'oneClass_data_oneHand'
