@@ -25,7 +25,7 @@ def create_classifiers(subjects):
 def test_dataset(subjects, classifiers):
     for classifier, subject in zip(classifiers, subjects):
         subject_number = subject[1]
-        rnd_subject_test = random.randint(0,125)
+        rnd_subject_test = random.randint(0, len(subjects) - 1)
 
         clf = classifier[0]
         X = subject[0]
@@ -45,9 +45,9 @@ def test_dataset(subjects, classifiers):
         # plt.scatter(values[:, 0], values[:, 1], color='r')
         # plt.show()
 
-subjects = import_data(data_filename)
-good_subjects = filter_and_pca_subjects(subjects, 8)
-classifiers = create_classifiers(good_subjects)
+# subjects = import_data(data_filename)
+# good_subjects = filter_and_pca_subjects(subjects, 8)
+# classifiers = create_classifiers(good_subjects)
 
-test_dataset(good_subjects, classifiers)
+# test_dataset(good_subjects, classifiers)
 
