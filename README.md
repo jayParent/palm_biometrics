@@ -19,8 +19,8 @@ Pour obtenir de l’aide : py run.py -h
 - Créer les dossiers nécessaires, extraire la région d’intérêt, appliquer le HOG et sauvegarder ces données en format binaire : py run.py -t -b palms_data
 - Filtrer les regions d’intérêts, appliquer le PCA, créer les classifieurs et exécuter un test sur chaque sujet en combinant ses images à celles d’un autre sujet au hasard, pour ensuite tenter de déterminer si chaque image appartient au sujet, ou est un intrus : py run.py -t
 2.	Tester le programme avec ses propres images.
-- py run.py -b &ltfichier&rt
-- py run.py -p &ltfichier&rt
+- py run.py -b &lt;fichier&gt;
+- py run.py -p &lt;fichier&gt;
 ## Crédits
 L’extraction de la région d’intérêt est performée par le script retrouvé ici :
 https://github.com/yyaddaden/PROIE
