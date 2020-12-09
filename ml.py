@@ -17,7 +17,6 @@ import csv
 
 
 def find_best_parameters(dataFile, labelsFile):
-
     with open(dataFile, 'rb') as fp:
         data = pickle.load(fp)
     with open(labelsFile, 'rb') as fp:
@@ -53,7 +52,6 @@ def find_best_parameters(dataFile, labelsFile):
 
 
 def get_cross_val_scores(dataFile, labelsFile):
-
     with open(dataFile, 'rb') as fp:
         data = pickle.load(fp)
     with open(labelsFile, 'rb') as fp:
@@ -77,6 +75,29 @@ def get_cross_val_scores(dataFile, labelsFile):
     print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
 
+def test_dataset_multiClass(dataFile, labelsFile):
+    with open(f'{dataFile}.txt', 'rb') as fp:
+        data = pickle.load(fp)
+    with open(f'{labelsFile}.txt', 'rb') as fp:
+        labels = pickle.load(fp)
+
+    pca = PCA(n_components=20)
+    pca.fit(data)
+
+    X = pca.fit_transform(data)
+    y = np.array(labels)
+    y = y.astype(np.float64)
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.33, random_state=42)
+
+    clf = SVC(C=20, kernel='rbf', gamma=0.02)
+    clf.fit(X_train, y_train)
+
+    print(clf.predict(X_test))
+    print(clf.score(X_test, y_test))
+
+
 # # # Whole dataset -- Accuracy: 0.88 (+/- 0.11)
 # get_cross_val_scores('data.txt', 'labels.txt')
 
@@ -86,33 +107,33 @@ def get_cross_val_scores(dataFile, labelsFile):
 # # # Testing different number of subjects -- 10 -- Accuracy: 0.88 (+/- 0.17)
 # get_cross_val_scores('data_10_subjects.txt', 'labels_10_subjects.txt')
 
-with open('data.txt', 'rb') as fp:
-    data = pickle.load(fp)
-with open('labels.txt', 'rb') as fp:
-    labels = pickle.load(fp)
+# with open('data.txt', 'rb') as fp:
+#     data = pickle.load(fp)
+# with open('labels.txt', 'rb') as fp:
+#     labels = pickle.load(fp)
 
-pca = PCA(n_components=20)
-pca.fit(data)
+# pca = PCA(n_components=20)
+# pca.fit(data)
 
-X = pca.fit_transform(data)
-y = np.array(labels)
-y = y.astype(np.float64)
+# X = pca.fit_transform(data)
+# y = np.array(labels)
+# y = y.astype(np.float64)
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.33, random_state=42)
+# X_train, X_test, y_train, y_test = train_test_split(
+#     X, y, test_size=0.33, random_state=42)
 
-# print(y[0:14])
-# print(y[14:17])
-# print(y[17:21])
+# # print(y[0:14])
+# # print(y[14:17])
+# # print(y[17:21])
 
-s1_train_normal = X[0:16]
-s1_test_normal = X[0:16]
-s1_train_outliers = X[20:21]
-s1_test = X[14:17]
+# s1_train_normal = X[0:16]
+# s1_test_normal = X[0:16]
+# s1_train_outliers = X[20:21]
+# s1_test = X[14:17]
 
-clf = OneClassSVM(kernel='linear')
-clf.fit(s1_train_normal)
-print(clf.predict(s1_test_normal))
+# clf = OneClassSVM(kernel='linear')
+# clf.fit(s1_train_normal)
+# print(clf.predict(s1_test_normal))
 
 
 # y_pred_train = clf.predict(X_train)

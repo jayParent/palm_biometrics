@@ -6,20 +6,29 @@ from skimage import io
 from skimage.feature import hog
 from skimage.transform import resize
 from sklearn.decomposition import PCA
+from sklearn.preprocessing import scale
 import os
 import pickle
 
 
-def create_dataset_folders(sourceFolder, targetFolder, datasetFolder):
-    if not os.path.exists(targetFolder):
-        os.mkdir(targetFolder)  
-    if not os.path.exists(datasetFolder):
-        os.mkdir(datasetFolder)
-
+def create_dataset_folders(sourceFolder, targetFolder, datasetFolder, clf):
     files = os.listdir(sourceFolder)
 
-    for i, f in enumerate(files):
-        os.mkdir(f'./{targetFolder}/{i+1}')
+    if clf == 'oneClass':
+        if not os.path.exists(targetFolder):
+            os.mkdir(targetFolder)  
+        if not os.path.exists(datasetFolder):
+            os.mkdir(datasetFolder)   
+
+        for i, f in enumerate(files):
+            os.mkdir(f'./{targetFolder}/{i+1}')
+
+    elif clf == 'multiClass':
+        if not os.path.exists(targetFolder):
+            os.mkdir(targetFolder)  
+        
+        for i, f in enumerate(files):
+            os.mkdir(f'./{targetFolder}/{i+1}')
 
 
 def get_and_save_roi(sourceFolder, targetFolder):
@@ -29,12 +38,11 @@ def get_and_save_roi(sourceFolder, targetFolder):
         for img in os.listdir(f'./{sourceFolder}/{f}'):
             try:
                 proie = PROIE()
-                proie.extract_roi(f'{sourceFolder}/{f}/{img}', rotate=True)
+                proie.extract_roi(f'./{sourceFolder}/{f}/{img}', rotate=True)
                 proie.save(f'./{targetFolder}/{i+1}/{img}.jpg')
             except:
                 continue
                 
-
 
 # def save_add_labels_and_side(folder):
 #     files = os.listdir(folder)
@@ -70,29 +78,29 @@ def get_and_save_roi(sourceFolder, targetFolder):
 #         pickle.dump(data, fp)
 
 
-# def save_add_labels(folder):
-#     files = os.listdir(folder)
+def save_add_labels(folder):
+    files = os.listdir(folder)
 
-#     data = []
-#     labels = []
+    data = []
+    labels = []
 
-#     for f in files:
-#         ic = io.ImageCollection(f'./{folder}/{f}/*.jpg')
+    for f in files:
+        ic = io.ImageCollection(f'./{folder}/{f}/*.jpg')
 
-#         for img in ic:
+        for img in ic:
 
-#             if img.shape[0] >= 128 and img.shape[1] >= 128:
-#                 img = transform.resize(img, (128, 128))
-#                 fd = hog(img, orientations=8, pixels_per_cell=(
-#                     8, 8), cells_per_block=(1, 1))
+            if img.shape[0] >= 128 and img.shape[1] >= 128:
+                img = transform.resize(img, (128, 128))
+                fd = hog(img, orientations=9, pixels_per_cell=(
+                    8, 8), cells_per_block=(2, 2))
 
-#             data.append(fd)
-#             labels.append(f)
+            data.append(fd)
+            labels.append(f)
 
-#     with open(f'data_{folder}.txt', 'wb') as fp:
-#         pickle.dump(data, fp)
-#     with open(f'labels_{folder}.txt', 'wb') as fp:
-#         pickle.dump(labels, fp)
+    with open(f'data_{folder}.txt', 'wb') as fp:
+        pickle.dump(data, fp)
+    with open(f'labels_{folder}.txt', 'wb') as fp:
+        pickle.dump(labels, fp)
 
 
 # def save_data_one_class(folder):
@@ -142,7 +150,7 @@ def save_data_one_class_one_hand(sourceFolder, targetFolder):
                 if img.shape[0] >= 128 and img.shape[1] >= 128:
                     img = transform.resize(img, (128, 128))
                     fd = hog(img, orientations=9, pixels_per_cell=(
-                        8, 8), cells_per_block=(4, 4))
+                        8, 8), cells_per_block=(2, 2))
 
                     data.append(fd)
 

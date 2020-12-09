@@ -9,7 +9,6 @@ from numpy import where, quantile
 from dataset_import import import_data, filter_and_pca_subjects
 from sklearn.svm import SVC, OneClassSVM
 
-data_filename = 'oneClass_data_oneHand'
 
 def create_classifiers(subjects):
     classifiers = []
@@ -22,7 +21,7 @@ def create_classifiers(subjects):
     return classifiers
 
 
-def test_dataset(subjects, classifiers):
+def test_dataset_oneClass(subjects, classifiers):
     for classifier, subject in zip(classifiers, subjects):
         subject_number = subject[1]
         rnd_subject_test = random.randint(0, len(subjects) - 1)
