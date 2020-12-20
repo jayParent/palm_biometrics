@@ -6,8 +6,8 @@ Projet développé dans le cadre du cours Projet en Informatique I - INF34515, �
 
 ## Technologies
 - [Python 3]( https://www.python.org/downloads/)
-- [Scikit-Image]( https://scikit-image.org/)
-- [Scikit-Learn]( https://scikit-learn.org/stable/)
+-[Scikit-Image]( https://scikit-image.org/)
+-[Scikit-Learn]( https://scikit-learn.org/stable/)
 
 ## Installation
 1.	Cloner le repository : https://github.com/jayParent/palm_biometrics.git
@@ -16,11 +16,23 @@ Projet développé dans le cadre du cours Projet en Informatique I - INF34515, �
 ## Utilisation
 Pour obtenir de l’aide : py run.py -h
 1.	Tester le programme avec les images données en exemple.
-- Créer les dossiers nécessaires, extraire la région d’intérêt, appliquer le HOG et sauvegarder ces données en format binaire : py run.py -t -b palms_data
-- Filtrer les regions d’intérêts, appliquer le PCA, créer les classifieurs et exécuter un test sur chaque sujet en combinant ses images à celles d’un autre sujet au hasard, pour ensuite tenter de déterminer si chaque image appartient au sujet, ou est un intrus : py run.py -t
+One-Class
+Créer les dossiers nécessaires, extraire la région d’intérêt, appliquer le HOG et sauvegarder ces données en format binaire : py run.py -t -oc -b
+Filtrer les regions d’intérêts, appliquer le PCA, créer les classifieurs et exécuter un test sur chaque sujet en combinant ses images à celles d’un autre sujet au hasard, pour ensuite tenter de déterminer si chaque image appartient au sujet, ou est un intrus : py run.py -t -oc -p
+Multi-Class
+Créer les dossiers nécessaires, extraire la région d’intérêt, appliquer le HOG, assigner les labels, sauvegarder ces données en format binaire : 
+py run.py -t -mc -b
+Appliquer le PCA, séparation des données en ensembles d’apprentissage et de test, apprentissage sur l’ensemble d’apprentissage, test sur l’ensemble de test.
+py run.py -t -mc -p
 2.	Tester le programme avec ses propres images.
-- py run.py -b &lt;fichier&gt;
-- py run.py -p &lt;fichier&gt;
+One-Class
+py run.py -oc -b &lt;fichier&gt;
+py run.py -oc -p &lt;fichier&gt; 
+
+Multi-Class
+py run.py -mc -b &lt;fichier&gt;
+py run.py -mc -p -d &lt;fichier&gt; - l &lt;fichier&gt;
+
 ## Crédits
 L’extraction de la région d’intérêt est performée par le script retrouvé ici :
 https://github.com/yyaddaden/PROIE
