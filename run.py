@@ -76,7 +76,9 @@ if __name__ == "__main__":
                 test_dataset_oneClass(good_subjects, classifiers)
 
             elif (args.multiclass):
-                test_dataset_multiClass(args.data, args.labels)
+                # test_dataset_multiClass(args.data, args.labels)
+                get_cross_val_scores(args.data, args.labels)
+                # find_best_parameters(args.data, args.labels)
 
         else:
             parser.print_help()

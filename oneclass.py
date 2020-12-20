@@ -32,8 +32,10 @@ def test_dataset_oneClass(subjects, classifiers):
         test = np.concatenate((X, outliers), axis=0)
 
         pred = clf.predict(test)
+        scores = clf.score_samples(X)
 
         print(f'Fitted on: {subject_number}')
+        print(f'Scores: {scores}')
         print(f'Prediction for: {subject_number} and {subjects[rnd_subject_test][1]}', pred)
         print('##############################################################################\n')
 
