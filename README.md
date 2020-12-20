@@ -14,19 +14,24 @@ Projet développé dans le cadre du cours Projet en Informatique I - INF34515, �
 2.	Installer les modules nécessaires : pip install -r requirements.txt
 
 ## Utilisation
-Pour obtenir de l’aide : py run.py -h
+Pour obtenir de l’aide : 
+py run.py -h
+
 1.	Tester le programme avec les images données en exemple.
 #### One-Class
 Créer les dossiers nécessaires, extraire la région d’intérêt, appliquer le HOG et sauvegarder ces données en format binaire : 
 
 py run.py -t -oc -b
+
 Filtrer les regions d’intérêts, appliquer le PCA, créer les classifieurs et exécuter un test sur chaque sujet en combinant ses images à celles d’un autre sujet au hasard, pour ensuite tenter de déterminer si chaque image appartient au sujet, ou est un intrus : 
 
 py run.py -t -oc -p
+
 #### Multi-Class
 Créer les dossiers nécessaires, extraire la région d’intérêt, appliquer le HOG, assigner les labels, sauvegarder ces données en format binaire : 
 
 py run.py -t -mc -b
+
 Appliquer le PCA, séparation des données en ensembles d’apprentissage et de test, apprentissage sur l’ensemble d’apprentissage, test sur l’ensemble de test:
 
 py run.py -t -mc -p
