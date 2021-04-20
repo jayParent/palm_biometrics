@@ -49,16 +49,16 @@ py run.py -t -mc -p
 2.	Tester le programme avec ses propres images.
 #### One-Class
 ```
-py run.py -oc -b &lt;fichier&gt;
+py run.py -oc -b <fichier>
 
-py run.py -oc -p &lt;fichier&gt;
+py run.py -oc -p <fichier>
 ```
 
 #### Multi-Class
 ```
-py run.py -mc -b &lt;fichier&gt;
+py run.py -mc -b <fichier>
 
-py run.py -mc -p -d &lt;fichier&gt; -l &lt;fichier&gt;
+py run.py -mc -p -d <fichier> -l <fichier>
 ```
 
 ## Crédits
